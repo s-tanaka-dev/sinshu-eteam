@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <title></title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@chirimen/microbit"></script>
+    <script src="https://chirimen.org/remote-connection/js/RelayServer.js"></script>
+  </head>
+  <body>
+    <div class="l-root" id="app">
+      <div class="l-wrapper">
+        <div class="l-container">
+          <div class="l-side">
+            <div class="l-header">
+              <h1 class="l-header__headline">{{ siteName }}</h1>
+            </div>
+            <div class="l-side__group">
+              <div class="l-side__block">
+                <div class="c-information__wrapper">
+                  <div class="c-information__block">
+                    <h2 class="c-information__headline">室内環境</h2>
+                    <div class="c-information__body">
+                      <dl class="c-information-data__item">
+                        <dt class="c-information-data__label">温度</dt>
+                        <dd class="c-information-data__value">
+                          {{ stTemp }}<span>°</span>
+                        </dd>
+                      </dl>
+                      <dl class="c-information-data__item">
+                        <dt class="c-information-data__label">湿度</dt>
+                        <dd class="c-information-data__value">
+                          {{ stHumidity }}<span>%</span>
+                        </dd>
+                      </dl>
+                      <dl class="c-information-data__item">
+                        <dt class="c-information-data__label">
+                          椅子に座っている人
+                        </dt>
+                        <dd class="c-information-data__value">
+                          {{ stSitting }}<span>人</span>
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+
+                  <div class="c-information__block">
+                    <h2 class="c-information__headline">デバイスの状況</h2>
+                    <div class="c-information__body">
+                      <div class="c-information-device__list">
+                        <div class="c-information-device__item">
+                          <p class="c-information-device__label">
+                            家電制御
+                          </p>
+                          <div class="c-information-device__group">
+                            <div
+                              class="c-information-device__status"
+                              :class="{'c-information-device__status--on' : getValues.doWake }"
+                            >
+                              <i></i>{{ getValues.doWake ? '起動中' : '停止中'
+                              }}
+                            </div>
+                            <div
+                              class="c-information-device__status"
+                              :class="{'c-information-device__status--on' : getValues.stPower }"
+                            >
+                              <i></i>{{ getValues.stPower ? '動作中' : '停止中'
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="c-information-device__item">
+                          <p class="c-information-device__label">
+                            自動換気
+                          </p>
+                          <div class="c-information-device__group">
+                            <div
+                              class="c-information-device__status"
+                              :class="{'c-information-device__status--on' : getValues.doOpen }"
+                            >
+                              <i></i>{{ getValues.doOpen ? '起動中' : '停止中'
+                              }}
+                            </div>
+                            <div
+                              class="c-information-device__status"
+                              :class="{'c-information-device__status--on' : getValues.stWindow }"
+                            >
+                              <i></i>{{ getValues.stWindow ? '開いています' :
+                              '閉じています' }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="l-main">
+            <div class="l-main__inner">
+              <dl class="c-alert__block">
+                <dt class="c-alert__label">MESSAGE.</dt>
+                <dd class="c-alert__message">
+                  {{ getValues.message }}
+                </dd>
+              </dl>
+
+              <div class="c-monitor__block">
+                <div
+                  class="c-monitor__item c-monitor__item--virus c-monitor__item--sizeS"
+                  :class="{
+                      isBad: getValues.dangerLevel === 2,
+                      isAlert: getValues.dangerLevel === 3
+                    }"
+                ></div>
+                <div
+                  class="c-monitor__item c-monitor__item--virus c-monitor__item--sizeM"
+                  :class="{
+                    isBad: getValues.dangerLevel === 2,
+                    isAlert: getValues.dangerLevel === 3
+                  }"
+                ></div>
+                <div
+                  class="c-monitor__item c-monitor__item--virus c-monitor__item--sizeL"
+                  :class="{
+                    isBad: getValues.dangerLevel === 2,
+                    isAlert: getValues.dangerLevel === 3
+                  }"
+                ></div>
+                <div
+                  class="c-monitor__item c-monitor__item--window"
+                  :class="{isOpen: getValues.doOpen }"
+                ></div>
+                <div
+                  class="c-monitor__item c-monitor__item--fan"
+                  :class="{ isOn: getValues.doWake || getValues.stPower }"
+                >
+                  <div class="fan"></div>
+                  <div class="fan_point"></div>
+                </div>
+                <div
+                  class="c-monitor__item c-monitor__item--human"
+                  :class="{
+                    isBad: getValues.dangerLevel === 2,
+                    isAlert: getValues.dangerLevel === 3
+                  }"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form name="js">
+        <input type="button" value="Connect" @click="connect();" />
+        <input type="button" value="Disconnect" @click="disconnect();" />
+        <p>{{ msg }}</p>
+      </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
